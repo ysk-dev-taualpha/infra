@@ -1,0 +1,21 @@
+services:
+  portal:
+    build:
+      context: /home/yplic/workspace/portal
+      dockerfile: .infra_portal/Dockerfile
+    image: portal:latest
+    container_name: portal
+    ports:
+      - "8080:8080"
+    environment:
+      HERMES_API_URL: "http://192.168.12.112:8642"
+      HERMES_API_KEY: "228f7ad3b11d075cba813961b418bbdb"
+      CODEX_API_URL: "http://192.168.12.107:8092"
+      ADDR: "0.0.0.0:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
