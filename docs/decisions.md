@@ -28,3 +28,10 @@
 - 設定はconfig.docker.jsonでhost.docker.internal経由でOllama/VOICEVOX、whisperサービス名でSTT連携
 - ヘルスチェック: runtime /healthz、whisper /health、depends_onで順序制御
 - ホストsystemdはdisable、再起動テスト通過
+
+## 2026-08-09: Phase 4はPortalのみ移行
+
+- Portalはstatelessで移行コスト最小、HubをLubuntu :8080に集約
+- Viewers/comfyui-console/genimg-apiはDesktop 83G等のデータ紐付けや利用頻度からPhase 4では見送り、需要に応じてPhase 4bで検討
+- PortalはThinkPad上のViewersをIP直指定で参照（HERMES_API_URL=192.168.12.112:8642同様）、Viewers移行後にURL切替予定
+- ビルドコンテキストはportal、Dockerfileは.infra_portal/に配置（gitignore）、infra側にも保持
