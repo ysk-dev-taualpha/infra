@@ -42,3 +42,10 @@
 - node-exporter (quay.io/prometheus/node-exporter) をサイドカー追加し hwmon + thermal_zone collectorでCPU温度を取得
 - Lubuntuでは k10temp のTctl/Tdie（pci0000:00_0000:00:18_3 temp1/temp2）がPrometheusで取得可能、Grafanaで可視化
 - Portal healthcheckは /api/health が外部ヘルスチェックで5s timeoutするため / に変更しtimeout 10sに緩和
+
+## 2026-08-09: Secretsローテーション（HERMES_API_KEY）
+
+- 事象: `compose/portal/docker-compose.yml` にHERMES_API_KEY（= API_SERVER_KEY）が平文で含まれ、publicリポジトリにpushされた
+- 対応: キーをローテーション（228f… → f5f1…）、composeからは `${HERMES_API_KEY}` 参照に変更、`.env`（gitignore）で管理、`.env.example` を追加
+- 教訓: Secretsは`.env` + `.gitignore`で管理し、composeの環境変数は `${VAR}` 形式で間接参照する。publicリポジトリでは特に注意
+- 旧キーはrevoked済みのため、git履歴に残っていても無効。履歴の書き換えは行わずローテーションで対応
