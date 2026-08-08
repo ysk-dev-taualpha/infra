@@ -53,9 +53,20 @@
     },
     {
       "type": "timeseries",
+      "title": "CPU Temperature",
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "targets": [
+        { "expr": "node_hwmon_temp_celsius", "legendFormat": "{{chip}} {{sensor}}" },
+        { "expr": "node_thermal_zone_temp", "legendFormat": "thermal {{type}} zone{{zone}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "celsius" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
       "title": "Network I/O",
       "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
       "targets": [
         { "expr": "rate(system_network_io_bytes_total{direction=\"receive\"}[1m])", "legendFormat": "rx {{device}}" },
         { "expr": "rate(system_network_io_bytes_total{direction=\"transmit\"}[1m])", "legendFormat": "tx {{device}}" }

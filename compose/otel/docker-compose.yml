@@ -42,6 +42,35 @@ services:
       - "9400:9400"
     restart: unless-stopped
 
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:v1.8.2
+    container_name: node-exporter
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --path.rootfs=/host
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($|/)
+      - --collector.hwmon
+      - --collector.thermal_zone
+      - --no-collector.arp
+      - --no-collector.bcache
+      - --no-collector.bonding
+      - --no-collector.infiniband
+      - --no-collector.ipvs
+      - --no-collector.mdadm
+      - --no-collector.nfs
+      - --no-collector.nfsd
+      - --no-collector.wifi
+      - --no-collector.xfs
+      - --no-collector.zfs
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    ports:
+      - "9100:9100"
+    restart: unless-stopped
+
   grafana:
     image: grafana/grafana:12.1.0
     container_name: grafana
