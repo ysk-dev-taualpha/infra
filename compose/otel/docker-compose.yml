@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   otelcol:
     image: otel/opentelemetry-collector-contrib:0.128.0
@@ -14,6 +20,7 @@ services:
       - "8889:8889"   # Prometheus metrics (hostmetrics)
       - "8888:8888"   # Self telemetry
       - "13133:13133" # Health check
+    logging: *default-logging
     restart: unless-stopped
 
   prometheus:
@@ -30,6 +37,7 @@ services:
       - "9090:9090"
     depends_on:
       - otelcol
+    logging: *default-logging
     restart: unless-stopped
 
   dcgm-exporter:
@@ -40,6 +48,7 @@ services:
     privileged: true
     ports:
       - "9400:9400"
+    logging: *default-logging
     restart: unless-stopped
 
   node-exporter:
@@ -69,6 +78,7 @@ services:
       - /:/host:ro
     ports:
       - "9100:9100"
+    logging: *default-logging
     restart: unless-stopped
 
   grafana:
@@ -86,6 +96,7 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    logging: *default-logging
     restart: unless-stopped
 
 volumes:

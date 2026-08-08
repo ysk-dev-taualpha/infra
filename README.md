@@ -26,25 +26,93 @@ infra/
 ├── compose/            # composeファイル群（stack単位）
 │   ├── otel/           # OTel + Prometheus + Grafana
 │   ├── runtime/        # Go Runtime + Python Service + Whisper
-│   ├── voicevox/       # VOICEVOX
-│   └── portal/         # Portal / Viewers
-└── scripts/            # 運用スクリプト
+│   └── portal/         # Portal
+└── scripts/            # 運用スクリプト（将来）
 ```
 
-## 運用
+## デプロイ
+
+### 初回セットアップ（Lubuntu）
 
 ```bash
-# デプロイ（Lubuntu上で）
-cd ~/workspace/infra/compose/<stack>
-docker compose up -d
+git clone https://github.com/ysk-dev-taualpha/infra.git ~/workspace/infra
 
-# ログ
-docker compose logs -f
+# Secretsを配置（.envはgitignore、.env.exampleを参照）
+cp ~/workspace/infra/.env.example ~/workspace/infra/.env
+# 編集: HERMES_API_KEY 等
+cp ~/workspace/infra/compose/portal/.env.example ~/workspace/infra/compose/portal/.env
+# 編集: HERMES_API_KEY
+cp ~/workspace/infra/compose/otel/.env.example ~/workspace/infra/compose/otel/.env
+# 編集: GRAFANA_ADMIN_PASSWORD
 
-# 更新
-git pull && docker compose up -d --build
+# Hermesの.env（Gateway用）は別途 ~/.hermes/.env で管理
+
+# ビルド用Dockerfileをコンテキストに配置
+mkdir -p ~/workspace/portal/.infra_portal
+cp ~/workspace/infra/compose/portal/Dockerfile ~/workspace/portal/.infra_portal/Dockerfile
+mkdir -p ~/workspace/local-ai-companion/.infra_runtime
+cp ~/workspace/infra/compose/runtime/Dockerfile ~/workspace/local-ai-companion/.infra_runtime/Dockerfile
+cp ~/workspace/infra/compose/runtime/Dockerfile.whisper ~/workspace/local-ai-companion/.infra_runtime/Dockerfile.whisper
 ```
+
+### 起動
+
+```bash
+# OTelスタック
+cd ~/workspace/infra/compose/otel && docker compose up -d
+# Runtime
+cd ~/workspace/infra/compose/runtime && docker compose up -d
+# Portal
+cd ~/workspace/infra/compose/portal && docker compose up -d
+```
+
+### 更新
+
+```bash
+cd ~/workspace/infra && git pull
+
+# Dockerfile更新があれば再コピー
+cp ~/workspace/infra/compose/portal/Dockerfile ~/workspace/portal/.infra_portal/Dockerfile
+cp ~/workspace/infra/compose/runtime/Dockerfile ~/workspace/local-ai-companion/.infra_runtime/Dockerfile
+cp ~/workspace/infra/compose/runtime/Dockerfile.whisper ~/workspace/local-ai-companion/.infra_runtime/Dockerfile.whisper
+
+# 各スタックで再ビルド＆再起動
+cd ~/workspace/infra/compose/otel && docker compose up -d
+cd ~/workspace/infra/compose/runtime && docker compose up -d --build
+cd ~/workspace/infra/compose/portal && docker compose up -d
+```
+
+### ログ・ヘルス
+
+```bash
+docker ps --format "{{.Names}} {{.Status}}"
+docker compose logs -f
+curl http://localhost:3000/api/health  # Grafana
+curl http://localhost:9090/-/healthy   # Prometheus
+curl http://localhost:8090/healthz     # Runtime
+curl http://localhost:8093/health      # Whisper
+curl http://localhost:8080/api/health  # Portal
+```
+
+### トラブルシュート
+
+| 症状 | 対処 |
+|------|------|
+| `docker compose config` で環境変数が空 | `.env` が正しいディレクトリにあるか確認（composeファイルと同階層） |
+| Portalが502 | ThinkPadのGateway（192.168.12.112:8642）が起動しているか、HERMES_API_KEYが一致しているか確認 |
+| Whisperが unhealthy | GPUドライバ・`nvidia-container-toolkit` の状態を `nvidia-smi` / `docker info \| grep nvidia` で確認 |
+| Grafanaにデータが無い | Prometheus Targets（http://192.168.12.123:9090/targets）で各jobがupか確認 |
+
+## アクセス先
+
+| サービス | URL | 認証 |
+|---------|-----|------|
+| Portal | http://192.168.12.123:8080 | なし |
+| Grafana | http://192.168.12.123:3000 | GRAFANA_ADMIN_USER / GRAFANA_ADMIN_PASSWORD |
+| Prometheus | http://192.168.12.123:9090 | なし（LAN内のみ） |
+| Runtime | http://192.168.12.123:8090 | なし |
+| Whisper | http://192.168.12.123:8093 | なし |
 
 ## 関連Issue
 
-- local-ai-companion側のIssueで管理（ラベル: infra）
+- infraリポジトリのIssues: https://github.com/ysk-dev-taualpha/infra/issues

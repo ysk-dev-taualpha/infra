@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   runtime:
     build:
@@ -15,6 +21,7 @@ services:
     depends_on:
       whisper:
         condition: service_healthy
+    logging: *default-logging
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8090/healthz"]
@@ -34,6 +41,7 @@ services:
       - "8093:8093"
     volumes:
       - whisper_cache:/root/.cache/huggingface
+    logging: *default-logging
     restart: unless-stopped
     deploy:
       resources:

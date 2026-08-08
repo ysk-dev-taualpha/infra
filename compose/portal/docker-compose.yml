@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   portal:
     build:
@@ -12,6 +18,7 @@ services:
       HERMES_API_KEY: "${HERMES_API_KEY}"
       CODEX_API_URL: "http://192.168.12.107:8092"
       ADDR: "0.0.0.0:8080"
+    logging: *default-logging
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/"]
