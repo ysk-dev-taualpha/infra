@@ -32,6 +32,16 @@ services:
       - otelcol
     restart: unless-stopped
 
+  dcgm-exporter:
+    image: nvcr.io/nvidia/k8s/dcgm-exporter:latest
+    container_name: dcgm-exporter
+    runtime: nvidia
+    user: root
+    privileged: true
+    ports:
+      - "9400:9400"
+    restart: unless-stopped
+
   grafana:
     image: grafana/grafana:12.1.0
     container_name: grafana
