@@ -11,3 +11,11 @@
 - Phase 1ではhostmetricsのみ、GPUはPhase 2へ分離
 - otelcolはprometheus exporterで:8889公開、Prometheusがscrapeするシンプル方式
 - OTLP receiverも有効化しておき将来の拡張に備える
+
+## 2026-08-09: Phase 2はGPUコンテナ基盤
+
+- nvidia-container-toolkitでDockerからGPUを利用可能に（ECSのGPUタスク相当）
+- dcgm-exporterは privileged + root + --gpus all が必要（DCGM host engineがnon-rootでは動作しないため）
+- イメージは nvcr.io/nvidia/k8s/dcgm-exporter:latest（タグ付きはnot found、latestのみ取得可能）
+- V100 16GB + GTX1060 6GB ともにDCGMで取得可能（温度/利用率/メモリ/電力/クロック）
+- Prometheusの追加jobとして統合、GrafanaでGPUパネル5枚追加
