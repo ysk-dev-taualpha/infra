@@ -19,3 +19,12 @@
 - イメージは nvcr.io/nvidia/k8s/dcgm-exporter:latest（タグ付きはnot found、latestのみ取得可能）
 - V100 16GB + GTX1060 6GB ともにDCGMで取得可能（温度/利用率/メモリ/電力/クロック）
 - Prometheusの追加jobとして統合、GrafanaでGPUパネル5枚追加
+
+## 2026-08-09: Phase 3はRuntimeコンテナ化（Go+Python同居 + Whisper分離）
+
+- Go Runtime + Python VADは同一コンテナに同居（python_service.commandのsh -c機構をそのまま再利用、変更量最小化）
+- Whisperのみ独立コンテナ（nvidia/cuda runtime、GPUパススルー、V100 small/cuda/float16）
+- ビルドコンテキストはlocal-ai-companion、Dockerfileは.infra_runtime/に配置（gitignore）、infra側にも同一ファイルを保持
+- 設定はconfig.docker.jsonでhost.docker.internal経由でOllama/VOICEVOX、whisperサービス名でSTT連携
+- ヘルスチェック: runtime /healthz、whisper /health、depends_onで順序制御
+- ホストsystemdはdisable、再起動テスト通過
