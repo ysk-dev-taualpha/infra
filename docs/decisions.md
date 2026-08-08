@@ -35,3 +35,10 @@
 - Viewers/comfyui-console/genimg-apiはDesktop 83G等のデータ紐付けや利用頻度からPhase 4では見送り、需要に応じてPhase 4bで検討
 - PortalはThinkPad上のViewersをIP直指定で参照（HERMES_API_URL=192.168.12.112:8642同様）、Viewers移行後にURL切替予定
 - ビルドコンテキストはportal、Dockerfileは.infra_portal/に配置（gitignore）、infra側にも保持
+
+## 2026-08-09: CPU温度はnode-exporterで収集
+
+- OTel hostmetricsには温度scraperがない（cpu/load/memory/disk等のみ）
+- node-exporter (quay.io/prometheus/node-exporter) をサイドカー追加し hwmon + thermal_zone collectorでCPU温度を取得
+- Lubuntuでは k10temp のTctl/Tdie（pci0000:00_0000:00:18_3 temp1/temp2）がPrometheusで取得可能、Grafanaで可視化
+- Portal healthcheckは /api/health が外部ヘルスチェックで5s timeoutするため / に変更しtimeout 10sに緩和
