@@ -1,0 +1,18 @@
+# Phase 3: faster-whisper STT (GPU)
+FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -sf /usr/bin/python3 /usr/bin/python
+WORKDIR /app
+COPY services/whisper-server/requirements.txt ./
+RUN pip3 install --no-cache-dir -r requirements.txt 2>&1 | tail -5
+COPY services/whisper-server/server.py ./server.py
+ENV WHISPER_MODEL=small \
+    WHISPER_DEVICE=cuda \
+    WHISPER_COMPUTE_TYPE=float16 \
+    WHISPER_HOST=0.0.0.0 \
+    WHISPER_PORT=8093
+EXPOSE 8093
+CMD ["python3", "-m", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8093"]

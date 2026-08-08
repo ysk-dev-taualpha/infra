@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+models/
+conversation.db
+*.db
+*.db-shm
+*.db-wal
