@@ -1,0 +1,66 @@
+{
+  "title": "Host Metrics (OTel)",
+  "uid": "host-metrics-otel",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "CPU Usage",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "sum(rate(system_cpu_time_seconds_total{state=\"idle\"}[1m])) by (host_name)", "legendFormat": "idle - {{host_name}}" },
+        { "expr": "1 - avg(rate(system_cpu_time_seconds_total{state=\"idle\"}[1m])) by (host_name)", "legendFormat": "used - {{host_name}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0, "max": 1 }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Usage",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "system_memory_usage_bytes{state=\"used\"}", "legendFormat": "used" },
+        { "expr": "system_memory_usage_bytes{state=\"free\"}", "legendFormat": "free" },
+        { "expr": "system_memory_usage_bytes{state=\"cached\"}", "legendFormat": "cached" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "Disk Usage",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        { "expr": "system_filesystem_usage_bytes{state=\"used\"}", "legendFormat": "{{device}} used" },
+        { "expr": "system_filesystem_usage_bytes{state=\"free\"}", "legendFormat": "{{device}} free" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "Load Average",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        { "expr": "system_cpu_load_average_1m", "legendFormat": "1m" },
+        { "expr": "system_cpu_load_average_5m", "legendFormat": "5m" },
+        { "expr": "system_cpu_load_average_15m", "legendFormat": "15m" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Network I/O",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "targets": [
+        { "expr": "rate(system_network_io_bytes_total{direction=\"receive\"}[1m])", "legendFormat": "rx {{device}}" },
+        { "expr": "rate(system_network_io_bytes_total{direction=\"transmit\"}[1m])", "legendFormat": "tx {{device}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "binBps" }, "overrides": [] }
+    }
+  ]
+}

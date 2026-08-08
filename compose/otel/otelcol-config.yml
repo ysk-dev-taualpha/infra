@@ -1,0 +1,48 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  hostmetrics:
+    collection_interval: 10s
+    scrapers:
+      cpu:
+      load:
+      memory:
+      disk:
+      filesystem:
+      network:
+      paging:
+      processes:
+
+processors:
+  batch:
+  resourcedetection:
+    detectors: [system]
+    system:
+      hostname_sources: [os]
+
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+  debug:
+    verbosity: basic
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics, otlp]
+      processors: [resourcedetection, batch]
+      exporters: [prometheus, debug]
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888

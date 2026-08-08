@@ -1,0 +1,54 @@
+services:
+  otelcol:
+    image: otel/opentelemetry-collector-contrib:0.128.0
+    container_name: otelcol
+    command: ["--config=/etc/otelcol-config.yml"]
+    volumes:
+      - ./otelcol-config.yml:/etc/otelcol-config.yml:ro
+      - /proc:/hostfs/proc:ro
+      - /sys:/hostfs/sys:ro
+      - /:/hostfs:ro
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8889:8889"   # Prometheus metrics (hostmetrics)
+      - "8888:8888"   # Self telemetry
+      - "13133:13133" # Health check
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+      - --web.enable-lifecycle
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom_data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - otelcol
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.1.0
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  prom_data:
+  grafana_data:
