@@ -1,0 +1,60 @@
+{
+  "title": "Container Metrics (cAdvisor)",
+  "uid": "containers-cadvisor",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Container CPU Usage",
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "sum(rate(container_cpu_usage_seconds_total{name!=\"\",container_label_com_docker_compose_service!=\"\"}[1m])) by (name)", "legendFormat": "{{name}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "Container Memory Usage",
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "container_memory_usage_bytes{name!=\"\",container_label_com_docker_compose_service!=\"\"}", "legendFormat": "{{name}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "Container Network I/O",
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        { "expr": "sum(rate(container_network_receive_bytes_total{name!=\"\"}[1m])) by (name)", "legendFormat": "rx {{name}}" },
+        { "expr": "sum(rate(container_network_transmit_bytes_total{name!=\"\"}[1m])) by (name)", "legendFormat": "tx {{name}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "binBps" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "Container FS Usage",
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        { "expr": "container_fs_usage_bytes{name!=\"\",container_label_com_docker_compose_service!=\"\"}", "legendFormat": "{{name}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "type": "table",
+      "title": "Container Up / Restarts",
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "targets": [
+        { "expr": "container_last_seen{name!=\"\",container_label_com_docker_compose_service!=\"\"}", "format": "table", "instant": true }
+      ]
+    }
+  ]
+}
