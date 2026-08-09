@@ -49,3 +49,9 @@
 - 対応: キーをローテーション（228f… → f5f1…）、composeからは `${HERMES_API_KEY}` 参照に変更、`.env`（gitignore）で管理、`.env.example` を追加
 - 教訓: Secretsは`.env` + `.gitignore`で管理し、composeの環境変数は `${VAR}` 形式で間接参照する。publicリポジトリでは特に注意
 - 旧キーはrevoked済みのため、git履歴に残っていても無効。履歴の書き換えは行わずローテーションで対応
+
+## 2026-08-09: Grafanaアラート → Discord通知
+
+- Grafana Contact Point: Discord webhook（`compose/otel/.env` の `DISCORD_WEBHOOK_URL`）
+- ルール: GPU temp >80C (2m), CPU temp >75C (2m), Disk >85% (5m) — 全て severity=warning → Discordへ通知
+- テスト: vector(1) で発火確認、通知が長文で届くことを確認後テストルールは削除
