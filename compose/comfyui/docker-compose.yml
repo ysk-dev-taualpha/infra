@@ -28,6 +28,7 @@ services:
       - HERMES_API_URL=http://host.docker.internal:8642
       - HERMES_API_KEY=${HERMES_API_KEY}
       - GENIMG_API=http://genimg:8091
+      - COMFY_URL=http://comfyui:8188
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
