@@ -9,123 +9,345 @@
     {
       "type": "timeseries",
       "title": "CPU Usage",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
       "targets": [
-        { "expr": "sum(rate(system_cpu_time_seconds_total{state=\"idle\"}[1m])) by (host_name)", "legendFormat": "idle - {{host_name}}" },
-        { "expr": "1 - avg(rate(system_cpu_time_seconds_total{state=\"idle\"}[1m])) by (host_name)", "legendFormat": "used - {{host_name}}" }
+        {
+          "expr": "sum(rate(system_cpu_time_seconds_total{state=\"idle\"}[1m])) by (host_name)",
+          "legendFormat": "idle - {{host_name}}"
+        },
+        {
+          "expr": "1 - avg(rate(system_cpu_time_seconds_total{state=\"idle\"}[1m])) by (host_name)",
+          "legendFormat": "used - {{host_name}}"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0, "max": 1 }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        },
+        "overrides": []
+      },
+      "id": 1
     },
     {
       "type": "timeseries",
       "title": "Memory Usage",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
       "targets": [
-        { "expr": "system_memory_usage_bytes{state=\"used\"}", "legendFormat": "used" },
-        { "expr": "system_memory_usage_bytes{state=\"free\"}", "legendFormat": "free" },
-        { "expr": "system_memory_usage_bytes{state=\"cached\"}", "legendFormat": "cached" }
+        {
+          "expr": "system_memory_usage_bytes{state=\"used\"}",
+          "legendFormat": "used"
+        },
+        {
+          "expr": "system_memory_usage_bytes{state=\"free\"}",
+          "legendFormat": "free"
+        },
+        {
+          "expr": "system_memory_usage_bytes{state=\"cached\"}",
+          "legendFormat": "cached"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "id": 2
     },
     {
       "type": "timeseries",
       "title": "Disk Usage",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
       "targets": [
-        { "expr": "system_filesystem_usage_bytes{state=\"used\"}", "legendFormat": "{{device}} used" },
-        { "expr": "system_filesystem_usage_bytes{state=\"free\"}", "legendFormat": "{{device}} free" }
+        {
+          "expr": "system_filesystem_usage_bytes{state=\"used\"}",
+          "legendFormat": "{{device}} used"
+        },
+        {
+          "expr": "system_filesystem_usage_bytes{state=\"free\"}",
+          "legendFormat": "{{device}} free"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "id": 3
     },
     {
       "type": "timeseries",
       "title": "Load Average",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
       "targets": [
-        { "expr": "system_cpu_load_average_1m", "legendFormat": "1m" },
-        { "expr": "system_cpu_load_average_5m", "legendFormat": "5m" },
-        { "expr": "system_cpu_load_average_15m", "legendFormat": "15m" }
-      ]
+        {
+          "expr": "system_cpu_load_average_1m",
+          "legendFormat": "1m"
+        },
+        {
+          "expr": "system_cpu_load_average_5m",
+          "legendFormat": "5m"
+        },
+        {
+          "expr": "system_cpu_load_average_15m",
+          "legendFormat": "15m"
+        }
+      ],
+      "id": 4
     },
     {
       "type": "timeseries",
       "title": "CPU Temperature",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
       "targets": [
-        { "expr": "node_hwmon_temp_celsius", "legendFormat": "{{chip}} {{sensor}}" },
-        { "expr": "node_thermal_zone_temp", "legendFormat": "thermal {{type}} zone{{zone}}" }
+        {
+          "expr": "node_hwmon_temp_celsius",
+          "legendFormat": "{{chip}} {{sensor}}"
+        },
+        {
+          "expr": "node_thermal_zone_temp",
+          "legendFormat": "thermal {{type}} zone{{zone}}"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "celsius" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "id": 5
     },
     {
       "type": "timeseries",
       "title": "Network I/O",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
       "targets": [
-        { "expr": "rate(system_network_io_bytes_total{direction=\"receive\"}[1m])", "legendFormat": "rx {{device}}" },
-        { "expr": "rate(system_network_io_bytes_total{direction=\"transmit\"}[1m])", "legendFormat": "tx {{device}}" }
+        {
+          "expr": "rate(system_network_io_bytes_total{direction=\"receive\"}[1m])",
+          "legendFormat": "rx {{device}}"
+        },
+        {
+          "expr": "rate(system_network_io_bytes_total{direction=\"transmit\"}[1m])",
+          "legendFormat": "tx {{device}}"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "binBps" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "id": 6
     },
     {
       "type": "timeseries",
       "title": "GPU Temperature",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 24 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 24
+      },
       "targets": [
-        { "expr": "DCGM_FI_DEV_GPU_TEMP", "legendFormat": "{{modelName}} (gpu={{gpu}})" },
-        { "expr": "DCGM_FI_DEV_MEMORY_TEMP", "legendFormat": "mem temp {{modelName}} (gpu={{gpu}})" }
+        {
+          "expr": "DCGM_FI_DEV_GPU_TEMP",
+          "legendFormat": "{{modelName}} (gpu={{gpu}})"
+        },
+        {
+          "expr": "DCGM_FI_DEV_MEMORY_TEMP",
+          "legendFormat": "mem temp {{modelName}} (gpu={{gpu}})"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "celsius" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "id": 7
     },
     {
       "type": "timeseries",
       "title": "GPU Utilization",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 24 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 24
+      },
       "targets": [
-        { "expr": "DCGM_FI_DEV_GPU_UTIL", "legendFormat": "gpu {{modelName}} ({{gpu}})" },
-        { "expr": "DCGM_FI_DEV_MEM_COPY_UTIL", "legendFormat": "mem copy {{modelName}} ({{gpu}})" }
+        {
+          "expr": "DCGM_FI_DEV_GPU_UTIL",
+          "legendFormat": "gpu {{modelName}} ({{gpu}})"
+        },
+        {
+          "expr": "DCGM_FI_DEV_MEM_COPY_UTIL",
+          "legendFormat": "mem copy {{modelName}} ({{gpu}})"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        },
+        "overrides": []
+      },
+      "id": 8
     },
     {
       "type": "timeseries",
       "title": "GPU Memory",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 24 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 24
+      },
       "targets": [
-        { "expr": "DCGM_FI_DEV_FB_USED", "legendFormat": "used {{modelName}} ({{gpu}})" },
-        { "expr": "DCGM_FI_DEV_FB_FREE", "legendFormat": "free {{modelName}} ({{gpu}})" }
+        {
+          "expr": "DCGM_FI_DEV_FB_USED",
+          "legendFormat": "used {{modelName}} ({{gpu}})"
+        },
+        {
+          "expr": "DCGM_FI_DEV_FB_FREE",
+          "legendFormat": "free {{modelName}} ({{gpu}})"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "megabytes" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "megabytes"
+        },
+        "overrides": []
+      },
+      "id": 9
     },
     {
       "type": "timeseries",
       "title": "GPU Power",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
       "targets": [
-        { "expr": "DCGM_FI_DEV_POWER_USAGE", "legendFormat": "{{modelName}} ({{gpu}})" }
+        {
+          "expr": "DCGM_FI_DEV_POWER_USAGE",
+          "legendFormat": "{{modelName}} ({{gpu}})"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "watt" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "id": 10
     },
     {
       "type": "timeseries",
       "title": "GPU Clocks",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
       "targets": [
-        { "expr": "DCGM_FI_DEV_SM_CLOCK", "legendFormat": "SM {{modelName}} ({{gpu}})" },
-        { "expr": "DCGM_FI_DEV_MEM_CLOCK", "legendFormat": "MEM {{modelName}} ({{gpu}})" }
+        {
+          "expr": "DCGM_FI_DEV_SM_CLOCK",
+          "legendFormat": "SM {{modelName}} ({{gpu}})"
+        },
+        {
+          "expr": "DCGM_FI_DEV_MEM_CLOCK",
+          "legendFormat": "MEM {{modelName}} ({{gpu}})"
+        }
       ],
-      "fieldConfig": { "defaults": { "unit": "hertz" }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "hertz"
+        },
+        "overrides": []
+      },
+      "id": 11
     }
   ]
 }
