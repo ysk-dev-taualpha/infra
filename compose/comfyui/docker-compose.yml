@@ -1,0 +1,36 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  genimg:
+    build:
+      context: /home/yplic/workspace/fanbox-gen
+      dockerfile: .infra_comfyui/Dockerfile.genimg
+    image: genimg:latest
+    container_name: genimg
+    ports:
+      - "8091:8091"
+    logging: *default-logging
+    restart: unless-stopped
+
+  comfyui-console:
+    build:
+      context: /home/yplic/workspace/comfyui-console
+      dockerfile: .infra_comfyui/Dockerfile.console
+    image: comfyui-console:latest
+    container_name: comfyui-console
+    ports:
+      - "8100:8100"
+    environment:
+      - HERMES_API_URL=http://host.docker.internal:8642
+      - HERMES_API_KEY=${HERMES_API_KEY}
+      - GENIMG_API=http://genimg:8091
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - genimg
+    logging: *default-logging
+    restart: unless-stopped
