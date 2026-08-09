@@ -1,0 +1,39 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  asmr-viewer:
+    build:
+      context: /home/yplic/workspace/asmr-viewer
+      dockerfile: .infra_viewer/Dockerfile
+    image: asmr-viewer:latest
+    container_name: asmr-viewer
+    ports:
+      - "8787:8787"
+    logging: *default-logging
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8787/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  missav-viewer:
+    build:
+      context: /home/yplic/workspace/missav-viewer
+      dockerfile: .infra_viewer/Dockerfile
+    image: missav-viewer:latest
+    container_name: missav-viewer
+    ports:
+      - "8788:8788"
+    logging: *default-logging
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8788/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
