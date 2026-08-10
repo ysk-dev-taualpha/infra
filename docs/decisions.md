@@ -55,3 +55,19 @@
 - Grafana Contact Point: Discord webhook（`compose/otel/.env` の `DISCORD_WEBHOOK_URL`）
 - ルール: GPU temp >80C (2m), CPU temp >75C (2m), Disk >85% (5m) — 全て severity=warning → Discordへ通知
 - テスト: vector(1) で発火確認、通知が長文で届くことを確認後テストルールは削除
+
+## 2026-08-10: ComfyUI移行 (V100, Lubuntu)
+
+- WinPC (192.168.12.107:8188) からLubuntu (192.168.12.123:8188) へComfyUI本体を移行、V100 16GBで稼働
+- モデル: realismByStableYogi_ponyV65, waiIllustriousSDXL_v170 (13GB) + LoRA 8種 (1.1GB) + controlnet 6.1GB をSamba一時共有でWinPCからNVMe ~/ComfyUI/models/ へ移管、HDD /mnt/data/ComfyUI/output は出力用
+- ComfyUIコンテナ: nvidia/cuda:12.4.0-runtime + torch 2.4.1 + comfy-kitchen 0.2.20 (0.2.28はlist[int]型でtorch互換エラー) + ComfyUI 0.31.0、compose/comfyuiでGPUマウント、V100 sm70対応
+- comfyui-console/genimgも compose/comfyuiへ集約、COMFY_URL=http://comfyui:8188 でLubuntu内通信、Portalは8188/8100をLubuntu参照に切替、UFW 8188/8100/8091許可
+- 生成テスト: 512x512 19.9s, 832x1216 batch2 27.2sで正常、scheduler未指定でComfyUI validationエラーが出たためgenimg serve.goにScheduler追加で解消
+- Sambaは移管後に停止・削除、UFW 445/139除去済み
+
+## 2026-08-10: Grafanaアラート (Discord 3ch, 画像付き)
+
+- ハードウェア: GPU temp 80C, CPU temp 75C, CPU usage 90% 5m, GPU util 90% 5m, GPU mem 90% 5m, Disk 85% 5m, HDD 85% 5m → hardware webhook
+- コンテナ: cAdvisor/node/dcgmターゲットダウン → containers webhook
+- 監視: prometheusダウン → monitoring webhook (流用)
+- NoDataはOK扱い、classic条件B1本、値表示B0、Grafana renderer (remote :8082) + host-metrics-otelパネル id付与 + __dashboardUid__/__panelId__で画像添付、4秒グループ待機でテスト発火確認済み
