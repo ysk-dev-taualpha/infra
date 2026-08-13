@@ -79,3 +79,4 @@
 - Gallery APIは`/gallery/`から`host.docker.internal:8765`へproxyし、ブラウザから同一オリジンで利用する
 - DockerfileとNginx設定の正本はinfraに置き、アプリ側`.infra_web/`へコピーしてbuildする既存方式に統一
 - `restart: unless-stopped`、`/healthz`、json-file 10MB×3世代を標準設定とする
+- `/gallery/`は`^~` prefix locationを使う。静的ファイル用regex locationによる`.png`等の横取りを防ぎ、ローカル画像を含む全Galleryリクエストをbackendへproxyする
