@@ -1,0 +1,13 @@
+.git
+.github
+.expo
+.vscode
+.claude
+node_modules
+dist
+coverage
+docs
+specs
+__tests__
+*.log
+*.tsbuildinfo
