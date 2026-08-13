@@ -1,0 +1,27 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  hermes-viewer-web:
+    build:
+      context: /home/yplic/workspace/hermes-viewer
+      dockerfile: .infra_web/Dockerfile
+      args:
+        EXPO_PUBLIC_GALLERY_URL: /gallery
+    image: hermes-viewer-web:latest
+    container_name: hermes-viewer-web
+    ports:
+      - "8790:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging: *default-logging
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

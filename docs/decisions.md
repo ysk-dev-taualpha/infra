@@ -71,3 +71,11 @@
 - コンテナ: cAdvisor/node/dcgmターゲットダウン → containers webhook
 - 監視: prometheusダウン → monitoring webhook (流用)
 - NoDataはOK扱い、classic条件B1本、値表示B0、Grafana renderer (remote :8082) + host-metrics-otelパネル id付与 + __dashboardUid__/__panelId__で画像添付、4秒グループ待機でテスト発火確認済み
+
+## 2026-08-13: Hermes Viewer WebをNginxコンテナで配備
+
+- Expo Web static exportをmulti-stage buildし、runtimeはNginxのみとする
+- Lubuntu `192.168.12.123:8790`で公開、Compose stackは`compose/hermes-viewer`
+- Gallery APIは`/gallery/`から`host.docker.internal:8765`へproxyし、ブラウザから同一オリジンで利用する
+- DockerfileとNginx設定の正本はinfraに置き、アプリ側`.infra_web/`へコピーしてbuildする既存方式に統一
+- `restart: unless-stopped`、`/healthz`、json-file 10MB×3世代を標準設定とする

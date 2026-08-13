@@ -26,7 +26,8 @@ infra/
 ├── compose/            # composeファイル群（stack単位）
 │   ├── otel/           # OTel + Prometheus + Grafana
 │   ├── runtime/        # Go Runtime + Python Service + Whisper
-│   └── portal/         # Portal
+│   ├── portal/         # Portal
+│   └── hermes-viewer/  # React Native Web + Nginx proxy
 └── scripts/            # 運用スクリプト（将来）
 ```
 
@@ -53,6 +54,10 @@ cp ~/workspace/infra/compose/portal/Dockerfile ~/workspace/portal/.infra_portal/
 mkdir -p ~/workspace/local-ai-companion/.infra_runtime
 cp ~/workspace/infra/compose/runtime/Dockerfile ~/workspace/local-ai-companion/.infra_runtime/Dockerfile
 cp ~/workspace/infra/compose/runtime/Dockerfile.whisper ~/workspace/local-ai-companion/.infra_runtime/Dockerfile.whisper
+mkdir -p ~/workspace/hermes-viewer/.infra_web
+cp ~/workspace/infra/compose/hermes-viewer/Dockerfile ~/workspace/hermes-viewer/.infra_web/Dockerfile
+cp ~/workspace/infra/compose/hermes-viewer/nginx.conf ~/workspace/hermes-viewer/.infra_web/nginx.conf
+cp ~/workspace/infra/compose/hermes-viewer/dockerignore ~/workspace/hermes-viewer/.dockerignore
 ```
 
 ### 起動
@@ -64,6 +69,8 @@ cd ~/workspace/infra/compose/otel && docker compose up -d
 cd ~/workspace/infra/compose/runtime && docker compose up -d
 # Portal
 cd ~/workspace/infra/compose/portal && docker compose up -d
+# Hermes Viewer Web
+cd ~/workspace/infra/compose/hermes-viewer && docker compose up -d --build
 ```
 
 ### 更新
@@ -75,11 +82,15 @@ cd ~/workspace/infra && git pull
 cp ~/workspace/infra/compose/portal/Dockerfile ~/workspace/portal/.infra_portal/Dockerfile
 cp ~/workspace/infra/compose/runtime/Dockerfile ~/workspace/local-ai-companion/.infra_runtime/Dockerfile
 cp ~/workspace/infra/compose/runtime/Dockerfile.whisper ~/workspace/local-ai-companion/.infra_runtime/Dockerfile.whisper
+cp ~/workspace/infra/compose/hermes-viewer/Dockerfile ~/workspace/hermes-viewer/.infra_web/Dockerfile
+cp ~/workspace/infra/compose/hermes-viewer/nginx.conf ~/workspace/hermes-viewer/.infra_web/nginx.conf
+cp ~/workspace/infra/compose/hermes-viewer/dockerignore ~/workspace/hermes-viewer/.dockerignore
 
 # 各スタックで再ビルド＆再起動
 cd ~/workspace/infra/compose/otel && docker compose up -d
 cd ~/workspace/infra/compose/runtime && docker compose up -d --build
 cd ~/workspace/infra/compose/portal && docker compose up -d
+cd ~/workspace/infra/compose/hermes-viewer && docker compose up -d --build
 ```
 
 ### ログ・ヘルス
@@ -92,6 +103,7 @@ curl http://localhost:9090/-/healthy   # Prometheus
 curl http://localhost:8090/healthz     # Runtime
 curl http://localhost:8093/health      # Whisper
 curl http://localhost:8080/api/health  # Portal
+curl http://localhost:8790/healthz     # Hermes Viewer Web
 ```
 
 ### トラブルシュート
@@ -112,6 +124,7 @@ curl http://localhost:8080/api/health  # Portal
 | Prometheus | http://192.168.12.123:9090 | なし（LAN内のみ） |
 | Runtime | http://192.168.12.123:8090 | なし |
 | Whisper | http://192.168.12.123:8093 | なし |
+| Hermes Viewer Web | http://192.168.12.123:8790 | なし（LAN内のみ） |
 
 ## 関連Issue
 
